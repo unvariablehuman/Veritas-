@@ -24,7 +24,7 @@ export default function Dashboard({ state, onStateChange, onNavigate }) {
   };
 
   return (
-    <div style={{ background: '#0A0B10', minHeight: '100vh', paddingBottom: '6rem' }}>
+    <div style={{ background: 'var(--bg-main)', minHeight: '100vh', paddingBottom: '6rem' }}>
       <section className="container-x" style={{ padding: '3rem 1.5rem' }}>
         <div className="chip">DASHBOARD</div>
         <h1 style={{ fontSize: 'clamp(2.2rem, 5vw, 3.4rem)', marginTop: '1rem' }}>Progres <span className="neon-cyan">Veritas</span>-mu</h1>

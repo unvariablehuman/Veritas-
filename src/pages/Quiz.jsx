@@ -120,7 +120,7 @@ export default function Quiz({ levelId, onNavigate, state, onStateChange }) {
   };
 
   return (
-    <div style={{ background: '#0A0B10', minHeight: '100vh', paddingBottom: '6rem' }}>
+    <div style={{ background: 'var(--bg-main)', minHeight: '100vh', paddingBottom: '6rem' }}>
       {toastMessage && (
         <div className={`toast show ${toastKind}`}>
           {toastKind === 'fact' ? '✓ ' : '✗ '}
@@ -179,17 +179,17 @@ export default function Quiz({ levelId, onNavigate, state, onStateChange }) {
                   </p>
                 </div>
                 <div style={{ textAlign: 'center', color: 'var(--text-muted)', fontSize: '.85rem', letterSpacing: '.04em' }}>
-                  Menurutmu ini <span className="neon-pink" style={{ fontWeight: 800 }}>MITOS</span> atau <span style={{ color: '#7CFFB2', fontWeight: 800 }}>FAKTA</span>?
+                  Menurutmu ini <span className="neon-pink" style={{ fontWeight: 800 }}>MITOS</span> atau <span style={{ color: 'var(--brand-mint)', fontWeight: 800 }}>FAKTA</span>?
                 </div>
               </div>
 
               {/* BACK */}
               <div className={`flip-face flip-face--back ${flipped ? (isMythResult ? "flip-face--myth" : "flip-face--fact") : ""}`}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                  <div className="chip" style={{ borderColor: isMythResult ? 'rgba(255,92,122,.6)' : 'rgba(124,255,178,.6)', color: isMythResult ? '#FF7095' : '#7CFFB2' }}>
+                  <div className="chip" style={{ borderColor: isMythResult ? 'rgba(255,92,122,.6)' : 'rgba(124,255,178,.6)', color: isMythResult ? '#FF7095' : 'var(--brand-mint)' }}>
                     {isMythResult ? "✗ MITOS" : "✓ FAKTA"}
                   </div>
-                  <div className="mono" style={{ color: userResultCorrect ? '#7CFFB2' : '#FF7095', fontSize: '.75rem' }}>
+                  <div className="mono" style={{ color: userResultCorrect ? 'var(--brand-mint)' : '#FF7095', fontSize: '.75rem' }}>
                     {userResultCorrect ? "✓ TEBAKAN BENAR" : "✗ TEBAKAN SALAH"}
                   </div>
                 </div>
@@ -225,7 +225,7 @@ export default function Quiz({ levelId, onNavigate, state, onStateChange }) {
             <button
               className="btn"
               data-testid="quiz-answer-fact"
-              style={{ minWidth: '180px', fontSize: '1.1rem', background: '#7CFFB2', color: '#0A0B10', borderColor: '#7CFFB2' }}
+              style={{ minWidth: '180px', fontSize: '1.1rem', background: 'var(--brand-mint)', color: 'var(--bg-elev)', borderColor: 'var(--brand-mint)' }}
               disabled={flipped}
               onClick={() => handleAnswer("fact")}
             >

@@ -24,7 +24,7 @@ export default function Library({ initialCat }) {
   });
 
   return (
-    <div style={{ background: '#0A0B10', minHeight: '100vh', paddingBottom: '6rem' }}>
+    <div style={{ background: 'var(--bg-main)', minHeight: '100vh', paddingBottom: '6rem' }}>
       <section className="container-x" style={{ padding: '3rem 1.5rem 6rem' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: '1.5rem' }}>
           <div>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Navbar from './components/Navbar';
 import KepoAI from './components/KepoAI';
 import Home from './pages/Home';
@@ -13,6 +13,15 @@ export default function App() {
   const [selectedLevelId, setSelectedLevelId] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [gameState, setGameState] = useState(() => KepoState.load());
+
+  const [lightMode, setLightMode] = useState(() => {
+    return localStorage.getItem("theme") === "light";
+  });
+
+  useEffect(() => {
+    document.documentElement.classList.toggle("light", lightMode);
+    localStorage.setItem("theme", lightMode ? "light" : "dark");
+  }, [lightMode]);
 
   const handleNavigate = (page, arg = null) => {
     setActivePage(page);
@@ -59,7 +68,7 @@ export default function App() {
 
   return (
     <>
-      <Navbar activePage={activePage} onNavigate={handleNavigate} xp={gameState.xp} />
+      <Navbar activePage={activePage} onNavigate={handleNavigate} xp={gameState.xp} lightMode={lightMode} setLightMode={setLightMode} />
       <main>
         {renderPage()}
       </main>
