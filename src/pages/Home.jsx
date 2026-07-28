@@ -95,7 +95,7 @@ export default function Home({ onNavigate }) {
             </div>
 
             {/* Kepo AI mini bubble */}
-            <div className="floaty" style={{ position: 'absolute', top: 0, left: '90px', padding: '.8rem 1rem', borderRadius: '1rem', borderBottomLeftRadius: '.3rem', background: '#1A1D28', border: '1.5px solid rgba(0, 240, 255, 0.3)', boxShadow: '0 0 30px rgba(0,240,255,.15)', animationDelay: '-2s' }}>
+            <div className="floaty" style={{ position: 'absolute', top: 0, left: '90px', padding: '.8rem 1rem', borderRadius: '1rem', borderBottomLeftRadius: '.3rem', background: 'var(--bg-elev)', border: '1.5px solid rgba(0, 240, 255, 0.3)', boxShadow: '0 0 30px rgba(0,240,255,.15)', animationDelay: '-2s' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '.5rem', marginBottom: '.4rem' }}>
                 <div style={{ width: '22px', height: '22px', borderRadius: '6px', background: 'linear-gradient(135deg, var(--brand-primary), var(--brand-secondary))', display: 'grid', placeItems: 'center', fontWeight: 900, fontSize: '.7rem', color: 'var(--bg-main)' }}>V</div>
                 <span style={{ fontSize: '.72rem', color: 'var(--brand-primary)', fontWeight: 700 }}>Veritas AI</span>

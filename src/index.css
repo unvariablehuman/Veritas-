@@ -20,7 +20,9 @@
   --nav-xp-bg: rgba(255, 215, 0, 0.06);
   --glass: rgba(18, 20, 29, 0.6);
   --shadoww: rgba(0, 0, 0, 0.6);
-  --kepo-bg: #1A1D28
+  --kepo-bg: #1A1D28;
+  --site-nav: rgba(10, 11, 16, 0.72);
+  --nav-open: rgba(10, 11, 16, 0.95);
 }
 
 .light {
@@ -47,8 +49,9 @@
   --nav-xp-bg: rgba(244, 180, 0, 0.06);
   --glass: rgba(248, 250, 252, 0.6);
   --shadoww: rgba(117, 115, 115, 0.6);
-  --kepo-bg: #e8e8e9
-
+  --kepo-bg: #e8e8e9;
+  --site-nav: rgba(255, 255, 255, 0.72);
+  --nav-open: rgba(255, 255, 255, 0.95);
 }
 
 *, *::before, *::after {
@@ -216,7 +219,7 @@ h1, h2, h3, h4 {
   position: sticky;
   top: 0;
   z-index: 40;
-  background: rgba(10, 11, 16, 0.72);
+  background: var(--site-nav);
   backdrop-filter: blur(18px) saturate(140%);
   -webkit-backdrop-filter: blur(18px) saturate(140%);
   border-bottom: 1px solid var(--border-default);
@@ -331,7 +334,7 @@ h1, h2, h3, h4 {
     top: 100%;
     left: 0;
     right: 0;
-    background: rgba(10, 11, 16, 0.95);
+    background: var(--nav-open);
     backdrop-filter: blur(18px);
     padding: 1rem 1.5rem;
     border-bottom: 1px solid var(--border-default);
