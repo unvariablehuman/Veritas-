@@ -1,19 +1,32 @@
 import React from 'react';
 import { KEPO_BADGES, KEPO_LEVELS } from '../utils/data';
 import * as KepoState from '../utils/state';
+import { BadgeIcon } from '../utils/icons';
+import { Trophy, Flame, Lock, Check, Play } from 'lucide-react';
+import { useAuth } from '../utils/AuthContext';
 
 export default function Dashboard({ state, onStateChange, onNavigate }) {
+  const { currentUser } = useAuth();
   const acc = state.totalAnswers ? Math.round(state.correctCount / state.totalAnswers * 100) : 0;
   const pct = Math.min(100, (state.xp / 1000) * 100);
 
   const earned = KepoState.earnedBadges(state);
   const earnedIds = new Set(earned.map(b => b.id));
 
-  const handleReset = () => {
-    if (window.confirm("Yakin reset semua progres? Aksi ini tidak bisa di-undo.")) {
-      KepoState.reset();
-      onStateChange(KepoState.load());
-      alert("Progres di-reset. Fresh start! 🔄");
+  const handleReset = async () => {
+    if (window.confirm('Yakin reset semua progres? Aksi ini tidak bisa di-undo.')) {
+      const fresh = KepoState.reset();
+      if (currentUser) {
+        if (currentUser.isDemo) {
+          KepoState.saveDemoState(fresh);
+        } else {
+          await KepoState.saveToFirestore(currentUser.uid, fresh);
+        }
+      } else {
+        KepoState.saveGuest(fresh);
+      }
+      onStateChange(fresh);
+      alert('Progres berhasil di-reset! Kembali ke Level 1 dengan 0 XP. 🔄');
     }
   };
 
@@ -25,9 +38,9 @@ export default function Dashboard({ state, onStateChange, onNavigate }) {
 
   return (
     <div style={{ background: 'var(--bg-main)', minHeight: '100vh', paddingBottom: '6rem' }}>
-      <section className="container-x" style={{ padding: '3rem 1.5rem' }}>
+      <section className="container-x" style={{ paddingTop: '7.5rem', paddingBottom: '3rem' }}>
         <div className="chip">DASHBOARD</div>
-        <h1 style={{ fontSize: 'clamp(2.2rem, 5vw, 3.4rem)', marginTop: '1rem' }}>Progres <span className="neon-cyan">Veritas</span>-mu</h1>
+        <h1 style={{ fontSize: 'clamp(2.2rem, 5vw, 3.4rem)', marginTop: '1rem' }}>Progres <span style={{ color: 'var(--brand-accent)' }}>Veritas+</span> mu</h1>
 
         {/* Top stats */}
         <div style={{ marginTop: '2.5rem', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem' }}>
@@ -37,7 +50,9 @@ export default function Dashboard({ state, onStateChange, onNavigate }) {
             <div style={{ marginTop: '.8rem' }}>
               <div className="xp-bar"><div className="xp-bar-fill" style={{ width: `${pct}%` }}></div></div>
               <div style={{ marginTop: '.4rem', fontSize: '.75rem', color: 'var(--text-muted)', fontFamily: "'JetBrains Mono', monospace" }}>
-                {state.xp >= 1000 ? "🏆 Grand Veritas tercapai!" : `Menuju Raja Veritas (${state.xp}/1000)`}
+                {state.xp >= 1000
+                  ? <span style={{ display: 'inline-flex', alignItems: 'center', gap: '5px' }}><Trophy size={14} color="#FFD700" /> Grand Veritas+ tercapai! 🎉</span>
+                  : `Menuju Raja Veritas+ (${state.xp}/1000)`}
               </div>
             </div>
           </div>
@@ -49,7 +64,10 @@ export default function Dashboard({ state, onStateChange, onNavigate }) {
           </div>
           <div className="card" data-testid="stat-streak">
             <div className="mono" style={{ color: 'var(--text-muted)', fontSize: '.75rem' }}>BEST STREAK</div>
-            <div style={{ fontFamily: "'Cabinet Grotesk', sans-serif", fontWeight: 900, fontSize: '3rem', marginTop: '.3rem', color: 'var(--brand-secondary)' }}>🔥 {state.bestStreak || 0}</div>
+            <div style={{ fontFamily: "'Cabinet Grotesk', sans-serif", fontWeight: 900, fontSize: '3rem', marginTop: '.3rem', color: 'var(--brand-secondary)', display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <Flame size={32} color="#FF9500" />
+              {state.bestStreak || 0}
+            </div>
           </div>
           <div className="card" data-testid="stat-accuracy">
             <div className="mono" style={{ color: 'var(--text-muted)', fontSize: '.75rem' }}>ACCURACY</div>
@@ -69,11 +87,13 @@ export default function Dashboard({ state, onStateChange, onNavigate }) {
               const owned = earnedIds.has(b.id);
               return (
                 <div key={b.id} className="card reveal-up" style={{ animationDelay: `${i * 40}ms`, opacity: owned ? 1 : 0.45, padding: '1.2rem' }} data-testid={`badge-${b.id}`}>
-                  <div style={{ fontSize: '2.2rem', filter: owned ? 'none' : 'grayscale(1)' }}>{b.icon}</div>
+                  <BadgeIcon badgeId={b.id} owned={owned} />
                   <div style={{ marginTop: '.6rem', fontFamily: "'Cabinet Grotesk', sans-serif", fontWeight: 900, fontSize: '1rem' }}>{b.name}</div>
                   <div style={{ marginTop: '.2rem', fontSize: '.75rem', color: 'var(--text-muted)', letterSpacing: '.02em' }}>{b.desc}</div>
-                  <div style={{ marginTop: '.8rem', fontFamily: "'JetBrains Mono', monospace", fontSize: '.7rem', color: owned ? '#7CFFB2' : 'var(--text-muted)' }}>
-                    {owned ? '✓ UNLOCKED' : '🔒 LOCKED'}
+                  <div style={{ marginTop: '.8rem', fontFamily: "'JetBrains Mono', monospace", fontSize: '.7rem', color: owned ? '#7CFFB2' : 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                    {owned
+                      ? <><Check size={11} color="#7CFFB2" /> UNLOCKED</>
+                      : <><Lock size={11} /> LOCKED</>}
                   </div>
                 </div>
               );
@@ -102,8 +122,12 @@ export default function Dashboard({ state, onStateChange, onNavigate }) {
                       <div style={{ fontFamily: "'Cabinet Grotesk', sans-serif", fontWeight: 800, marginTop: '.2rem' }}>{l.title}</div>
                       <div style={{ fontSize: '.75rem', color: 'var(--text-muted)', marginTop: '.15rem' }}>{l.subtitle}</div>
                     </div>
-                    <div style={{ fontSize: '1.4rem', color: done ? '#7CFFB2' : (unlocked ? l.color : 'var(--text-muted)') }}>
-                      {done ? '✓' : (unlocked ? '▶' : '🔒')}
+                    <div style={{ fontSize: '1.4rem', color: done ? '#7CFFB2' : (unlocked ? l.color : 'var(--text-muted)'), display: 'flex', alignItems: 'center' }}>
+                      {done
+                        ? <Check size={20} color="#7CFFB2" strokeWidth={2.5} />
+                        : unlocked
+                          ? <Play size={18} color={l.color} fill={l.color} />
+                          : <Lock size={18} />}
                     </div>
                   </div>
                 </button>
@@ -115,7 +139,7 @@ export default function Dashboard({ state, onStateChange, onNavigate }) {
         {/* Action row */}
         <div style={{ marginTop: '3rem', display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
           <button className="btn btn-primary" onClick={() => onNavigate("map")} data-testid="dashboard-back-map">Lanjut ke Peta →</button>
-          <button className="btn btn-ghost" onClick={() => onNavigate("quiz")} data-testid="dashboard-random-quiz">Quiz Random 5 Kartu</button>
+          <button className="btn btn-ghost" onClick={() => onNavigate("quiz")} data-testid="dashboard-random-quiz">Cobain Quiz Acak</button>
           <button className="btn btn-ghost" onClick={handleReset} data-testid="dashboard-reset-btn" style={{ borderColor: 'rgba(255,92,122,.35)', color: '#FF7095' }}>Reset Progres</button>
         </div>
       </section>

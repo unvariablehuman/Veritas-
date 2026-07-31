@@ -335,6 +335,7 @@ export const KEPO_LIBRARY = [
     title: "Kopi itu Dehidrasi?",
     verdict: "myth",
     text: "Kafein memang diuretik ringan, tapi total cairan dari secangkir kopi tetap positif. Kamu tetap terhidrasi.",
+    source: "European Journal of Clinical Nutrition",
   },
   {
     icon: "🍫",
@@ -342,6 +343,7 @@ export const KEPO_LIBRARY = [
     title: "Cokelat Bikin Jerawat",
     verdict: "myth",
     text: "Studi Journal of American Academy of Dermatology tidak menemukan hubungan langsung cokelat murni & jerawat. Yang jahat: gula & susu tinggi.",
+    source: "Journal of American Academy of Dermatology",
   },
   {
     icon: "🍎",
@@ -349,6 +351,7 @@ export const KEPO_LIBRARY = [
     title: "Newton & Apel Jatuh",
     verdict: "fact",
     text: "Kisah apel jatuh benar-benar diceritakan Newton sendiri kepada William Stukeley pada 1726 — meski apel tidak pernah 'kena kepala'.",
+    source: "Royal Society Archives",
   },
   {
     icon: "🐧",
@@ -356,6 +359,7 @@ export const KEPO_LIBRARY = [
     title: "Penguin Setia Seumur Hidup",
     verdict: "myth",
     text: "Kebanyakan spesies penguin ganti pasangan tiap musim kawin. Hanya beberapa spesies (misal Gentoo) yang cenderung monogami jangka panjang.",
+    source: "National Geographic Science",
   },
   {
     icon: "🔋",
@@ -363,6 +367,7 @@ export const KEPO_LIBRARY = [
     title: "Simpan Baterai di Kulkas",
     verdict: "myth",
     text: "Menyimpan baterai alkaline atau Li-ion di kulkas justru bisa menyebabkan kondensasi & korosi terminal. Simpan di suhu ruang sejuk kering.",
+    source: "Battery University",
   },
   {
     icon: "🌙",
@@ -370,6 +375,7 @@ export const KEPO_LIBRARY = [
     title: "Bulan Purnama Bikin Gila",
     verdict: "myth",
     text: "Meta-analisis besar tidak menemukan korelasi antara fase bulan dan perilaku manusia. Ilusi ini disebut 'lunar effect'.",
+    source: "Current Directions in Psychological Science",
   },
   {
     icon: "🌡️",
@@ -377,6 +383,7 @@ export const KEPO_LIBRARY = [
     title: "Kedinginan Bikin Flu",
     verdict: "myth",
     text: "Flu disebabkan virus, bukan cuaca dingin. Tapi udara dingin+kering membuat mukosa hidung kurang efektif menahan virus.",
+    source: "Harvard Health Publishing",
   },
   {
     icon: "📶",
@@ -384,6 +391,7 @@ export const KEPO_LIBRARY = [
     title: "5G Menyebarkan Virus",
     verdict: "myth",
     text: "Virus adalah entitas biologis, mustahil menyebar via gelombang radio. WHO dan seluruh komunitas ilmiah sudah membantah klaim ini berkali-kali.",
+    source: "World Health Organization (WHO)",
   },
   {
     icon: "🍜",
@@ -391,13 +399,15 @@ export const KEPO_LIBRARY = [
     title: "Rendang Butuh 4-8 Jam",
     verdict: "fact",
     text: "Rendang autentik Minang memang dimasak 4-8 jam agar santan mengering total & bumbu menyerap. Karena itu rendang bisa awet berhari-hari tanpa kulkas.",
+    source: "UNESCO Intangible Cultural Heritage",
   },
   {
     icon: "🦈",
     category: "science",
-    title: "Hiu Tidak Hamil",
+    title: "Hiu Tidak Kena Kanker",
     verdict: "myth",
     text: "Hiu bisa terkena kanker. Mitos ini dipopulerkan industri suplemen tulang rawan hiu di era 90an. Justru menyebabkan populasi hiu turun drastis.",
+    source: "American Association for Cancer Research",
   },
   {
     icon: "🏛️",
@@ -405,6 +415,7 @@ export const KEPO_LIBRARY = [
     title: "Gladiator Selalu Mati",
     verdict: "myth",
     text: "Sebagian besar pertarungan gladiator TIDAK berakhir dengan kematian. Mereka adalah aset investasi mahal — mati satu = rugi besar bagi pemiliknya.",
+    source: "Journal of Roman Studies",
   },
   {
     icon: "🚿",
@@ -412,6 +423,7 @@ export const KEPO_LIBRARY = [
     title: "Mandi Malam Bikin Rematik",
     verdict: "myth",
     text: "Rematik / arthritis disebabkan autoimun, genetik, dan usia — bukan mandi malam. Yang benar: air dingin ke otot tegang bisa terasa nyeri sementara.",
+    source: "Perhimpunan Reumatologi Indonesia",
   },
 ];
 

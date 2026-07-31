@@ -1,78 +1,189 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Navbar from './components/Navbar';
 import KepoAI from './components/KepoAI';
+import AuthModal from './components/AuthModal';
 import Home from './pages/Home';
 import Map from './pages/Map';
 import Quiz from './pages/Quiz';
 import Library from './pages/Library';
 import Dashboard from './pages/Dashboard';
+import { AuthProvider, useAuth } from './utils/AuthContext';
 import * as KepoState from './utils/state';
 
-export default function App() {
-  const [activePage, setActivePage] = useState("home");
-  const [selectedLevelId, setSelectedLevelId] = useState(null);
+/* ─── Inner app (needs access to useAuth) ─────────────────────────── */
+function AppInner() {
+  const { currentUser, authLoading, signOut } = useAuth();
+
+  const [activePage,       setActivePage]       = useState('home');
+  const [selectedLevelId,  setSelectedLevelId]  = useState(null);
   const [selectedCategory, setSelectedCategory] = useState(null);
-  const [gameState, setGameState] = useState(() => KepoState.load());
+  const [gameState,        setGameState]         = useState(() => KepoState.loadGuestState());
 
-  const [lightMode, setLightMode] = useState(() => {
-    return localStorage.getItem("theme") === "light";
-  });
+  // Auth modal state
+  const [authModalOpen,    setAuthModalOpen]    = useState(false);
+  const [authModalTab,     setAuthModalTab]     = useState('login');
+  const [authModalReason,  setAuthModalReason]  = useState('');
 
+  // Light / dark mode
+  const [lightMode, setLightMode] = useState(() => localStorage.getItem('theme') === 'light');
   useEffect(() => {
-    document.documentElement.classList.toggle("light", lightMode);
-    localStorage.setItem("theme", lightMode ? "light" : "dark");
+    document.documentElement.classList.toggle('light', lightMode);
+    localStorage.setItem('theme', lightMode ? 'light' : 'dark');
   }, [lightMode]);
 
-  const handleNavigate = (page, arg = null) => {
-    setActivePage(page);
-    if (page === "quiz") {
-      setSelectedLevelId(arg); // levelId
-    } else if (page === "library") {
-      setSelectedCategory(arg); // categoryId
+  /* ── Load / sync progress when auth state resolves ─────────────── */
+  useEffect(() => {
+    if (authLoading) return;
+
+    if (currentUser) {
+      if (currentUser.isDemo) {
+        setGameState(KepoState.loadDemoState());
+      } else {
+        KepoState.loadFromFirestore(currentUser.uid).then(state => {
+          setGameState(state);
+        });
+      }
+    } else {
+      // Guest → fresh guest state (0 XP, level 1 unlocked)
+      setGameState(KepoState.loadGuestState());
     }
-  };
+  }, [currentUser, authLoading]);
 
-  const handleStateChange = (newState) => {
+  /* ── Persist state change ───────────────────────────────────────── */
+  const handleStateChange = useCallback((newState) => {
     setGameState(newState);
+    if (currentUser) {
+      if (currentUser.isDemo) {
+        KepoState.saveDemoState(newState);
+      } else {
+        KepoState.saveToFirestore(currentUser.uid, newState);
+      }
+    } else {
+      KepoState.saveGuest(newState);
+    }
+  }, [currentUser]);
+
+  /* ── Navigation with soft-auth gate ────────────────────────────── */
+  const handleNavigate = (page, arg = null) => {
+    // Soft gate: Dashboard requires login to show real persisted progress
+    if (page === 'dashboard' && !currentUser) {
+      setAuthModalReason('Simpan progressmu dan lihat statistik lengkap dengan login dulu.');
+      setAuthModalTab('login');
+      setAuthModalOpen(true);
+      return; // don't navigate yet — will re-navigate after login via useEffect below
+    }
+
+    setActivePage(page);
+    if (page === 'quiz')    setSelectedLevelId(arg);
+    if (page === 'library') setSelectedCategory(arg);
   };
 
+  // After login succeeds (currentUser changes from null → user),
+  // if user was trying to reach Dashboard, take them there.
+  const [pendingPage, setPendingPage] = useState(null);
+  useEffect(() => {
+    if (currentUser && pendingPage) {
+      setActivePage(pendingPage);
+      setPendingPage(null);
+    }
+  }, [currentUser, pendingPage]);
+
+  // Override handleNavigate to track pending page
+  const handleNavigateWithPending = (page, arg = null) => {
+    if (page === 'dashboard' && !currentUser) {
+      setPendingPage('dashboard');
+      setAuthModalReason('Simpan progressmu dan lihat statistik lengkap dengan login dulu.');
+      setAuthModalTab('login');
+      setAuthModalOpen(true);
+      return;
+    }
+    handleNavigate(page, arg);
+  };
+
+  /* ── Open auth modal from Navbar ────────────────────────────────── */
+  const openAuthModal = (tab = 'login', reason = '') => {
+    setAuthModalTab(tab);
+    setAuthModalReason(reason);
+    setAuthModalOpen(true);
+  };
+
+  /* ── Page renderer ──────────────────────────────────────────────── */
   const renderPage = () => {
     switch (activePage) {
-      case "home":
-        return <Home onNavigate={handleNavigate} />;
-      case "map":
-        return <Map onNavigate={handleNavigate} state={gameState} />;
-      case "quiz":
+      case 'home':
+        return <Home onNavigate={handleNavigateWithPending} />;
+      case 'map':
+        return <Map onNavigate={handleNavigateWithPending} state={gameState} />;
+      case 'quiz':
         return (
           <Quiz
             levelId={selectedLevelId}
-            onNavigate={handleNavigate}
+            onNavigate={handleNavigateWithPending}
             state={gameState}
             onStateChange={handleStateChange}
           />
         );
-      case "library":
+      case 'library':
         return <Library initialCat={selectedCategory} />;
-      case "dashboard":
+      case 'dashboard':
         return (
           <Dashboard
             state={gameState}
             onStateChange={handleStateChange}
-            onNavigate={handleNavigate}
+            onNavigate={handleNavigateWithPending}
           />
         );
       default:
-        return <Home onNavigate={handleNavigate} />;
+        return <Home onNavigate={handleNavigateWithPending} />;
     }
   };
 
+  if (authLoading) {
+    // Minimal loading screen while Firebase resolves auth state
+    return (
+      <div style={{
+        minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center',
+        background: 'var(--bg-main)',
+      }}>
+        <div style={{ textAlign: 'center' }}>
+          <img src="/logo.svg" alt="Veritas+" style={{ height: '36px', opacity: .7 }} />
+          <div style={{ marginTop: '1rem', color: 'var(--text-muted)', fontSize: '.85rem' }}>Memuat…</div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <>
-      <Navbar activePage={activePage} onNavigate={handleNavigate} xp={gameState.xp} lightMode={lightMode} setLightMode={setLightMode} />
-      <main>
-        {renderPage()}
-      </main>
+      <Navbar
+        activePage={activePage}
+        selectedLevelId={selectedLevelId}
+        onNavigate={handleNavigateWithPending}
+        xp={gameState.xp}
+        lightMode={lightMode}
+        setLightMode={setLightMode}
+        currentUser={currentUser}
+        onOpenAuth={openAuthModal}
+        onSignOut={signOut}
+      />
+      <main>{renderPage()}</main>
       <KepoAI />
+
+      <AuthModal
+        open={authModalOpen}
+        onClose={() => setAuthModalOpen(false)}
+        defaultTab={authModalTab}
+        reason={authModalReason}
+      />
     </>
+  );
+}
+
+/* ─── Root with AuthProvider ─────────────────────────────────────── */
+export default function App() {
+  return (
+    <AuthProvider>
+      <AppInner />
+    </AuthProvider>
   );
 }

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { Bot, Sparkles, X, Send } from 'lucide-react';
 
 const RESPONSES = [
   // Greetings
@@ -69,14 +70,78 @@ const QUICK = [
   "AI beneran cerdas?",
 ];
 
-function findReply(text) {
-  const q = text.toLowerCase();
+const GEMINI_SYSTEM_INSTRUCTION = `Kamu adalah Veritas AI, asisten analis mitos & fakta cerdas dan ramah di aplikasi Veritas+.
+Tugas utama: Membantu pengguna memverifikasi mitos vs fakta seputar Teknologi, Kesehatan, Sains, Sejarah, dan Budaya.
+Aturan jawaban:
+1. Selalu menjawab dalam bahasa Indonesia yang ramah, hangat, komunikatif, dan ilmiah namun mudah dipahami.
+2. Berikan penjelasan yang LENGKAP, JELAS, dan UTUH (sekitar 2-4 kalimat).
+3. Jika pengguna bertanya pertanyaan singkat atau umum (seperti "ilmu apa?", "apa itu sains?"), sapa dengan hangat, jelaskan maksudnya secara menarik, lalu tanyakan mitos/fakta yang ingin dibahas.`;
+
+async function fetchGeminiAI(userText, history = []) {
+  const apiKey = import.meta.env.VITE_GEMINI_API_KEY || import.meta.env.GEMINI_API_KEY || '';
+  if (!apiKey) return null;
+
+  const modelsToTry = [
+    'gemini-flash-latest',
+    'gemini-2.0-flash',
+    'gemini-2.0-flash-lite'
+  ];
+
+  const formattedHistory = history
+    .filter(m => m.sender === 'user' || m.sender === 'bot')
+    .slice(-6)
+    .map(m => ({
+      role: m.sender === 'user' ? 'user' : 'model',
+      parts: [{ text: m.text }]
+    }));
+
+  const payload = {
+    systemInstruction: {
+      parts: [{ text: GEMINI_SYSTEM_INSTRUCTION }]
+    },
+    contents: [
+      ...formattedHistory,
+      { role: 'user', parts: [{ text: userText }] }
+    ],
+    generationConfig: {
+      temperature: 0.7,
+      maxOutputTokens: 500,
+    }
+  };
+
+  for (const model of modelsToTry) {
+    try {
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        const replyText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+        if (replyText) return replyText;
+      } else {
+        const errData = await res.json().catch(() => ({}));
+        console.warn(`[Veritas AI] Gemini API model ${model} returned status ${res.status}:`, errData);
+      }
+    } catch (err) {
+      console.warn(`[Veritas AI] Fetch error for model ${model}:`, err);
+    }
+  }
+
+  return null;
+}
+
+function getDirectReply(text) {
+  const q = text.toLowerCase().trim();
   for (const r of RESPONSES) {
     for (const k of r.keys) {
       if (q.includes(k)) return r.reply;
     }
   }
-  return FALLBACKS[Math.floor(Math.random() * FALLBACKS.length)];
+  return null;
 }
 
 export default function KepoAI() {
@@ -96,19 +161,31 @@ export default function KepoAI() {
     scrollToBottom();
   }, [messages, typing]);
 
-  const handleSend = (text) => {
-    if (!text.trim()) return;
-    setMessages(prev => [...prev, { text, sender: "user" }]);
+  const handleSend = async (text) => {
+    if (!text.trim() || typing) return;
+    const userMsg = text.trim();
+    setMessages(prev => [...prev, { text: userMsg, sender: "user" }]);
     setInputValue("");
     setTyping(true);
 
-    const reply = findReply(text);
-    const delay = 500 + Math.min(1200, text.length * 20);
-
-    setTimeout(() => {
+    // 1. Check hardcoded responses first for top 4 quick options & known keywords!
+    const hardcodedReply = getDirectReply(userMsg);
+    if (hardcodedReply) {
+      await new Promise(res => setTimeout(res, 450));
       setTyping(false);
-      setMessages(prev => [...prev, { text: reply, sender: "bot" }]);
-    }, delay);
+      setMessages(prev => [...prev, { text: hardcodedReply, sender: "bot" }]);
+      return;
+    }
+
+    // 2. If not hardcoded, use Gemini AI
+    let reply = await fetchGeminiAI(userMsg, messages);
+    if (!reply) {
+      await new Promise(res => setTimeout(res, 600));
+      reply = FALLBACKS[Math.floor(Math.random() * FALLBACKS.length)];
+    }
+
+    setTyping(false);
+    setMessages(prev => [...prev, { text: reply, sender: "bot" }]);
   };
 
   const handleFormSubmit = (e) => {
@@ -123,26 +200,27 @@ export default function KepoAI() {
         className="kepo-toggle"
         id="kepo-toggle"
         data-testid="kepo-chat-toggle"
-        aria-label="Buka Kepo AI"
+        aria-label={open ? "Tutup Veritas AI" : "Buka Veritas AI"}
         onClick={() => setOpen(!open)}
       >
-        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M21 12a8 8 0 0 1-11.6 7.13L4 21l1.87-5.4A8 8 0 1 1 21 12z"/>
-          <circle cx="9" cy="12" r="1"/>
-          <circle cx="12" cy="12" r="1"/>
-          <circle cx="15" cy="12" r="1"/>
-        </svg>
+        {open ? (
+          <X size={24} strokeWidth={2.4} color="#ffffff" />
+        ) : (
+          <Bot size={26} strokeWidth={2.2} color="#ffffff" />
+        )}
       </button>
 
       {/* PANEL */}
       <div className={`kepo-panel ${open ? "open" : ""}`} id="kepo-panel" role="dialog" aria-label="Veritas AI Chat">
         <div className="kepo-header">
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-            <div className="kepo-avatar">V</div>
+            <div className="kepo-avatar">
+              <Bot size={20} strokeWidth={2.4} color="#ffffff" />
+            </div>
             <div>
-              <div style={{ fontFamily: "'Cabinet Grotesk', sans-serif", fontWeight: 900, fontSize: '1rem', letterSpacing: '-.02em', color: '#fff' }}>Veritas AI</div>
-              <div style={{ fontSize: '.72rem', color: '#7CFFB2', display: 'flex', alignItems: 'center', gap: '.3rem' }}>
-                <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#7CFFB2', boxShadow: '0 0 8px #7CFFB2', display: 'inline-block' }}></span>
+              <div className="kepo-title">Veritas AI</div>
+              <div className="kepo-status">
+                <span className="kepo-status-dot"></span>
                 Online · Siap Membantu
               </div>
             </div>
@@ -154,9 +232,7 @@ export default function KepoAI() {
             style={{ background: 'transparent', border: 'none', color: '#94A3B8', cursor: 'pointer', padding: '6px', borderRadius: '6px' }}
             onClick={() => setOpen(false)}
           >
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round">
-              <path d="M6 6l12 12M6 18L18 6"/>
-            </svg>
+            <X size={18} strokeWidth={2.2} />
           </button>
         </div>
 
@@ -204,9 +280,7 @@ export default function KepoAI() {
             onChange={(e) => setInputValue(e.target.value)}
           />
           <button className="kepo-send" type="submit" data-testid="kepo-chat-send" aria-label="Kirim">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/>
-            </svg>
+            <Send size={18} strokeWidth={2.4} />
           </button>
         </form>
       </div>
