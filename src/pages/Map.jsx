@@ -197,7 +197,7 @@ function NodeTooltip({ level, isCompleted, isUnlocked, onStart, onClose, anchorR
 /* ─────────────────────────────────────────────────────────────
    ECertificateModal — Official E-Certificate Card
 ────────────────────────────────────────────────────────────── */
-function ECertificateModal({ state, onClose }) {
+export function ECertificateModal({ state, onClose }) {
   const dateStr = new Date().toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' });
 
   /* Hide navbar and lock body scroll while this modal is open */

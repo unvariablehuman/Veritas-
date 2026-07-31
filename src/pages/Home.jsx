@@ -292,7 +292,6 @@ export default function Home({ onNavigate }) {
       {/* HOW IT WORKS */}
       <section className="container-x" style={{ paddingTop: '5rem', paddingBottom: '5rem' }}>
         <div className="reveal-up mb-4">
-          <div className="chip">03 STEPS</div>
           <h2 style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', marginTop: '1rem', maxWidth: '620px' }}>
             Ragu → Verifikasi → <span style={{ color: 'var(--brand-accent)' }}>Veritas+</span>
           </h2>

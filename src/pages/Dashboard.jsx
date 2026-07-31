@@ -1,12 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { KEPO_BADGES, KEPO_LEVELS } from '../utils/data';
 import * as KepoState from '../utils/state';
 import { BadgeIcon } from '../utils/icons';
-import { Trophy, Flame, Lock, Check, Play } from 'lucide-react';
+import { Trophy, Flame, Lock, Check, Play, Award } from 'lucide-react';
 import { useAuth } from '../utils/AuthContext';
+import { ECertificateModal } from './Map';
 
 export default function Dashboard({ state, onStateChange, onNavigate }) {
   const { currentUser } = useAuth();
+  const [showCertModal, setShowCertModal] = useState(false);
   const acc = state.totalAnswers ? Math.round(state.correctCount / state.totalAnswers * 100) : 0;
   const pct = Math.min(100, (state.xp / 1000) * 100);
 
@@ -139,10 +141,17 @@ export default function Dashboard({ state, onStateChange, onNavigate }) {
         {/* Action row */}
         <div style={{ marginTop: '3rem', display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
           <button className="btn btn-primary" onClick={() => onNavigate("map")} data-testid="dashboard-back-map">Lanjut ke Peta →</button>
-          <button className="btn btn-ghost" onClick={() => onNavigate("quiz")} data-testid="dashboard-random-quiz">Cobain Quiz Acak</button>
+          <button className="btn btn-ghost" onClick={() => setShowCertModal(true)} data-testid="dashboard-cert-btn" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+            <Award size={16} /> Cetak Sertifikat
+          </button>
           <button className="btn btn-ghost" onClick={handleReset} data-testid="dashboard-reset-btn" style={{ borderColor: 'rgba(255,92,122,.35)', color: '#FF7095' }}>Reset Progres</button>
         </div>
       </section>
+
+      {/* Official E-Certificate Modal */}
+      {showCertModal && (
+        <ECertificateModal state={state} onClose={() => setShowCertModal(false)} />
+      )}
     </div>
   );
 }
