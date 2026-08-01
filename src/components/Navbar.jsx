@@ -64,7 +64,7 @@ export default function Navbar({
             </a>
 
             {/* Desktop nav links */}
-            <div className="hidden md:flex items-center gap-1 lg:gap-2" id="nav-links">
+            <div className="hidden min-[640px]:flex items-center gap-1 lg:gap-2" id="nav-links">
               {NAV_ITEMS.map(item => {
                 const isActive = item.page === activeNavPage;
                 return (
@@ -86,7 +86,7 @@ export default function Navbar({
 
               {/* Info About Us Button — hidden on mobile, shown md+ */}
               <button
-                className="hidden md:inline-flex p-1.5 sm:p-2 rounded-full text-slate-600 dark:text-slate-300 hover:text-teal-600 dark:hover:text-teal-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                className="hidden min-[640px]:inline-flex p-1.5 sm:p-2 rounded-full text-slate-600 dark:text-slate-300 hover:text-teal-600 dark:hover:text-teal-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
                 onClick={() => setShowAbout(true)}
                 title="Tentang Veritas+"
                 aria-label="Tentang Veritas+"
@@ -97,7 +97,7 @@ export default function Navbar({
 
               {/* Dark mode toggle — hidden on mobile, shown md+ */}
               <button
-                className="hidden md:inline-flex p-1.5 sm:p-2 rounded-full text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                className="hidden min-[640px]:inline-flex p-1.5 sm:p-2 rounded-full text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
                 onClick={() => setLightMode(!lightMode)}
                 title={lightMode ? 'Switch to Dark Mode' : 'Switch to Light Mode'}
               >
@@ -224,7 +224,7 @@ export default function Navbar({
 
               {/* Mobile hamburger */}
               <button
-                className="md:hidden p-1.5 sm:p-2 rounded-full text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                className="min-[640px]:hidden p-1.5 sm:p-2 rounded-full text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
                 id="mobile-menu-btn"
                 data-testid="mobile-menu-btn"
                 aria-label="Menu"
@@ -240,7 +240,7 @@ export default function Navbar({
 
         {/* Mobile dropdown — card terpisah di bawah pill, tidak mengubah bentuk pill */}
         {mobileOpen && (
-          <div className="md:hidden mt-2 floating-dock rounded-2xl px-3 py-3 flex flex-col gap-0.5">
+          <div className="min-[640px]:hidden mt-2 floating-dock rounded-2xl px-3 py-3 flex flex-col gap-0.5">
             {NAV_ITEMS.map(item => {
               const isActive = item.page === activeNavPage;
               return (
