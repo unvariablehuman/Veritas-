@@ -672,12 +672,12 @@ export default function Map({ onNavigate, state }) {
   };
 
   /* ── Layout: cumulative node positions with extra slot for zone banners ── */
-  const NODE_GAP   = 145; // gap between consecutive nodes
-  const ZONE_SLOT  = 75;  // extra vertical space reserved for a zone banner
+  const NODE_GAP   = 155; // gap between consecutive nodes
+  const ZONE_SLOT  = 85;  // extra vertical space reserved for a zone banner
 
   const nodeTops = KEPO_LEVELS.reduce((acc, level, i) => {
     if (i === 0) {
-      acc.push(ZONE_BANNERS[level.id] ? 85 : 50);
+      acc.push(ZONE_BANNERS[level.id] ? 145 : 75);
     } else {
       const prev = acc[i - 1];
       const extra = ZONE_BANNERS[level.id] ? ZONE_SLOT : 0;
@@ -781,8 +781,8 @@ export default function Map({ onNavigate, state }) {
             /* Node dimensions */
             const btnSize = isBoss ? 84 : isActive ? 76 : 68;
 
-            /* Zone banner positioning */
-            const bannerTop = topPx - (isActive ? 70 : 60);
+            /* Zone banner positioning: sits above node & badge */
+            const bannerTop = topPx - (isActive ? 122 : 78);
 
             return (
               <React.Fragment key={level.id}>
