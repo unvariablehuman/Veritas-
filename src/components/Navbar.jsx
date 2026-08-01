@@ -351,7 +351,7 @@ export default function Navbar({
 
               {/* Description */}
               <p style={{ fontSize: '.84rem', color: 'var(--text-secondary)', lineHeight: 1.55, marginBottom: '1rem', textAlign: 'center' }}>
-                <strong style={{ color: 'var(--text-primary)' }}>Veritas+</strong> adalah platform edukasi interaktif berbasis kecerdasan buatan & gamifikasi untuk memverifikasi mitos vs fakta di masyarakat secara presisi.
+                <strong style={{ color: 'var(--text-primary)' }}>Veritas+</strong> membantu masyarakat membedakan mitos dan fakta melalui pembelajaran interaktif, gamifikasi, serta dukungan AI Assistant yang mendorong kebiasaan berpikir kritis dan verifikasi informasi.
               </p>
 
               {/* Features list */}
@@ -369,7 +369,7 @@ export default function Navbar({
                   <ShieldCheck size={20} style={{ color: 'var(--brand-primary)', marginTop: '2px', flexShrink: 0 }} />
                   <div>
                     <div style={{ fontSize: '.82rem', fontWeight: 700, color: 'var(--text-primary)' }}>Kartu 3D & Learning Path</div>
-                    <div style={{ fontSize: '.75rem', color: 'var(--text-secondary)', marginTop: '2px', lineHeight: 1.4 }}>Petualangan 8 level kartu 3D flip interaktif.</div>
+                    <div style={{ fontSize: '.75rem', color: 'var(--text-secondary)', marginTop: '2px', lineHeight: 1.4 }}>Jelajahi 8 level pembelajaran interaktif melalui kartu 3D flip.</div>
                   </div>
                 </div>
 
@@ -382,7 +382,7 @@ export default function Navbar({
                   <Bot size={20} style={{ color: 'var(--brand-primary)', marginTop: '2px', flexShrink: 0 }} />
                   <div>
                     <div style={{ fontSize: '.82rem', fontWeight: 700, color: 'var(--text-primary)' }}>Veritas AI Assistant</div>
-                    <div style={{ fontSize: '.75rem', color: 'var(--text-secondary)', marginTop: '2px', lineHeight: 1.4 }}>Analisis fakta live bertenaga Google Gemini.</div>
+                    <div style={{ fontSize: '.75rem', color: 'var(--text-secondary)', marginTop: '2px', lineHeight: 1.4 }}>Verifikasi fakta secara real-time berbasis Google Gemini.</div>
                   </div>
                 </div>
 
@@ -395,7 +395,7 @@ export default function Navbar({
                   <Trophy size={20} style={{ color: 'var(--brand-primary)', marginTop: '2px', flexShrink: 0 }} />
                   <div>
                     <div style={{ fontSize: '.82rem', fontWeight: 700, color: 'var(--text-primary)' }}>Gamifikasi & Rewards</div>
-                    <div style={{ fontSize: '.75rem', color: 'var(--text-secondary)', marginTop: '2px', lineHeight: 1.4 }}>Streak, XP rewards, level up & 10 lencana.</div>
+                    <div style={{ fontSize: '.75rem', color: 'var(--text-secondary)', marginTop: '2px', lineHeight: 1.4 }}>Dapatkan XP, streak harian, badge, dan sertifikat digital.</div>
                   </div>
                 </div>
               </div>
@@ -406,7 +406,7 @@ export default function Navbar({
                 paddingTop: '.75rem', borderTop: '1px solid var(--border-default)',
                 fontSize: '.75rem', color: 'var(--text-muted)'
               }}>
-                <span>Dikembangkan oleh <strong style={{ color: 'var(--text-primary)' }}>Tim Veritas+</strong></span>
+                <span>© Tim Saya Akan Lawan! • CITECH UNEJ 2026</span>
                 <span style={{
                   padding: '2px 8px', borderRadius: '999px',
                   background: 'var(--nav-xp-bg)', border: '1px solid var(--border-neon)',
