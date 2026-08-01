@@ -48,7 +48,7 @@ export default function Navbar({
     <>
       <header className="fixed top-2 sm:top-4 left-1/2 -translate-x-1/2 z-50 w-[94%] sm:w-[92%] max-w-6xl pointer-events-auto overflow-visible">
         <nav
-          className={`floating-dock ${scrolled ? 'scrolled' : ''} ${mobileOpen ? 'rounded-2xl sm:rounded-3xl' : 'rounded-full'} px-3.5 sm:px-6 py-2 sm:py-3 transition-all duration-300 overflow-visible`}
+          className={`floating-dock ${scrolled ? 'scrolled' : ''} rounded-full px-3.5 sm:px-6 py-2 sm:py-3 transition-all duration-300`}
           data-testid="site-nav"
         >
           <div className="flex items-center justify-between gap-1.5 sm:gap-6">
@@ -236,63 +236,64 @@ export default function Navbar({
               </button>
             </div>
           </div>
-
-          {/* Mobile dropdown */}
-          {mobileOpen && (
-            <div className="md:hidden mt-2.5 pt-2.5 border-t border-slate-200/60 dark:border-slate-800/80 flex flex-col gap-1">
-              {NAV_ITEMS.map(item => {
-                const isActive = item.page === activeNavPage;
-                return (
-                  <a
-                    key={item.key}
-                    href="#"
-                    onClick={(e) => { e.preventDefault(); onNavigate(item.page); setMobileOpen(false); }}
-                    className={`dock-item flex items-center justify-between w-full px-3.5 py-2 rounded-xl text-sm font-semibold transition-all ${
-                      isActive
-                        ? 'bg-teal-500/15 text-teal-600 dark:text-cyan-400 border border-teal-500/30 font-bold'
-                        : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/50'
-                    }`}
-                    data-testid={`nav-${item.key}`}
-                  >
-                    <span>{item.label}</span>
-                    {isActive && <span className="w-2 h-2 rounded-full bg-teal-500 dark:bg-cyan-400 shadow-sm"></span>}
-                  </a>
-                );
-              })}
-              {/* Auth action in mobile menu */}
-              {!currentUser && (
-                <button
-                  onClick={() => { setMobileOpen(false); onOpenAuth('login'); }}
-                  className="mt-1 w-full text-center px-3.5 py-2.5 rounded-xl bg-amber-500/10 border border-amber-400/40 text-amber-600 dark:text-amber-400 font-bold text-sm hover:bg-amber-500/20 transition-all cursor-pointer"
-                >
-                  Masuk / Daftar ✨
-                </button>
-              )}
-
-              {/* Info + Theme Toggle — only show in mobile drawer */}
-              <div className="flex items-center gap-2 pt-1 mt-1 border-t border-slate-200/60 dark:border-slate-800/60">
-                <button
-                  className="flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-xl text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/50 transition-colors"
-                  onClick={() => { setMobileOpen(false); setShowAbout(true); }}
-                >
-                  <Info size={15} strokeWidth={2.2} />
-                  <span>Tentang</span>
-                </button>
-                <button
-                  className="flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-xl text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/50 transition-colors"
-                  onClick={() => setLightMode(!lightMode)}
-                >
-                  {lightMode ? (
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M20 15.5A8.5 8.5 0 1 1 8.5 4a7 7 0 0 0 11.5 11.5z" stroke="currentColor" strokeWidth="2"/></svg>
-                  ) : (
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="5" stroke="currentColor" strokeWidth="2"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M19.1 4.9l-1.4 1.4M6.3 17.7l-1.4 1.4" stroke="currentColor" strokeWidth="2"/></svg>
-                  )}
-                  <span>{lightMode ? 'Mode Gelap' : 'Mode Terang'}</span>
-                </button>
-              </div>
-            </div>
-          )}
         </nav>
+
+        {/* Mobile dropdown — card terpisah di bawah pill, tidak mengubah bentuk pill */}
+        {mobileOpen && (
+          <div className="md:hidden mt-2 floating-dock rounded-2xl px-3 py-3 flex flex-col gap-0.5">
+            {NAV_ITEMS.map(item => {
+              const isActive = item.page === activeNavPage;
+              return (
+                <a
+                  key={item.key}
+                  href="#"
+                  onClick={(e) => { e.preventDefault(); onNavigate(item.page); setMobileOpen(false); }}
+                  className={`flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all ${
+                    isActive
+                      ? 'bg-teal-500/15 text-teal-600 dark:text-cyan-400 border border-teal-500/30 font-bold'
+                      : 'text-slate-600 dark:text-slate-300 hover:bg-black/5 dark:hover:bg-white/5'
+                  }`}
+                  data-testid={`nav-${item.key}`}
+                >
+                  <span>{item.label}</span>
+                  {isActive && <span className="w-2 h-2 rounded-full bg-teal-500 dark:bg-cyan-400"></span>}
+                </a>
+              );
+            })}
+
+            {/* Auth */}
+            {!currentUser && (
+              <button
+                onClick={() => { setMobileOpen(false); onOpenAuth('login'); }}
+                className="mt-1 w-full text-center px-3.5 py-2.5 rounded-xl bg-amber-500/10 border border-amber-400/40 text-amber-600 dark:text-amber-400 font-bold text-sm hover:bg-amber-500/20 transition-all cursor-pointer"
+              >
+                Masuk / Daftar ✨
+              </button>
+            )}
+
+            {/* Info + Theme — utility row */}
+            <div className="flex items-center gap-1 pt-2 mt-1">
+              <button
+                className="flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-xl text-xs font-medium text-slate-500 dark:text-slate-400 hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
+                onClick={() => { setMobileOpen(false); setShowAbout(true); }}
+              >
+                <Info size={14} strokeWidth={2.2} />
+                <span>Tentang</span>
+              </button>
+              <button
+                className="flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-xl text-xs font-medium text-slate-500 dark:text-slate-400 hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
+                onClick={() => setLightMode(!lightMode)}
+              >
+                {lightMode ? (
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M20 15.5A8.5 8.5 0 1 1 8.5 4a7 7 0 0 0 11.5 11.5z" stroke="currentColor" strokeWidth="2"/></svg>
+                ) : (
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="5" stroke="currentColor" strokeWidth="2"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M19.1 4.9l-1.4 1.4M6.3 17.7l-1.4 1.4" stroke="currentColor" strokeWidth="2"/></svg>
+                )}
+                <span>{lightMode ? 'Mode Gelap' : 'Mode Terang'}</span>
+              </button>
+            </div>
+          </div>
+        )}
       </header>
 
       {/* ── Tentang Veritas+ Modal ── */}
