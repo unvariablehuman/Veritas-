@@ -48,7 +48,7 @@ export default function Navbar({
     <>
       <header className="fixed top-2 sm:top-4 left-1/2 -translate-x-1/2 z-50 w-[96%] sm:w-[92%] max-w-6xl pointer-events-auto overflow-visible">
         <nav
-          className={`floating-dock ${scrolled ? 'scrolled' : ''} rounded-full pl-5 pr-5 sm:px-6 py-2 sm:py-3 transition-all duration-300`}
+          className={`floating-dock ${scrolled ? 'scrolled' : ''} rounded-full px-4 sm:px-6 py-2 sm:py-3 transition-all duration-300`}
           data-testid="site-nav"
         >
           <div className="flex items-center justify-between gap-1.5 sm:gap-6">
@@ -60,7 +60,7 @@ export default function Navbar({
               onClick={(e) => { e.preventDefault(); onNavigate('home'); }}
               data-testid="brand-home"
             >
-              <img src="/logo.svg" alt="Veritas+ Logo" className="brand-logo-img h-6 sm:h-7" />
+              <img src="/logo.svg" alt="Veritas+ Logo" className="brand-logo-img h-[18px] min-[400px]:h-5 sm:h-7" />
             </a>
 
             {/* Desktop nav links */}
@@ -240,7 +240,16 @@ export default function Navbar({
 
         {/* Mobile dropdown — card terpisah di bawah pill, tidak mengubah bentuk pill */}
         {mobileOpen && (
-          <div className="min-[640px]:hidden mt-2 floating-dock rounded-2xl px-3 py-3 flex flex-col gap-0.5">
+          <div
+            className="min-[640px]:hidden mt-2 rounded-2xl px-3 py-3 flex flex-col gap-0.5"
+            style={{
+              background: 'var(--bg-surface)',
+              border: '1px solid var(--border-default)',
+              boxShadow: '0 8px 32px rgba(0,0,0,0.18)',
+              backdropFilter: 'blur(20px)',
+              WebkitBackdropFilter: 'blur(20px)',
+            }}
+          >
             {NAV_ITEMS.map(item => {
               const isActive = item.page === activeNavPage;
               return (
