@@ -224,13 +224,13 @@ export default function Navbar({
 
               {/* Mobile hamburger */}
               <button
-                className="min-[640px]:hidden p-1.5 sm:p-2 rounded-full text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                className="min-[640px]:hidden w-7 h-7 flex items-center justify-center rounded-full text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors flex-shrink-0"
                 id="mobile-menu-btn"
                 data-testid="mobile-menu-btn"
                 aria-label="Menu"
                 onClick={() => setMobileOpen(!mobileOpen)}
               >
-                <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
                   <path d="M4 6h16M4 12h16M4 18h16"/>
                 </svg>
               </button>
