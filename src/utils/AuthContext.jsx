@@ -33,11 +33,23 @@ export function AuthProvider({ children }) {
 
   // Listen to Firebase auth state changes
   useEffect(() => {
-    const unsub = onAuthStateChanged(auth, (user) => {
-      setFirebaseUser(user);
+    if (!auth) {
       setAuthLoading(false);
-    });
-    return unsub;
+      return;
+    }
+    try {
+      const unsub = onAuthStateChanged(auth, (user) => {
+        setFirebaseUser(user);
+        setAuthLoading(false);
+      }, (err) => {
+        console.warn("Firebase Auth state listener error:", err);
+        setAuthLoading(false);
+      });
+      return unsub;
+    } catch (e) {
+      console.warn("Firebase Auth listener failed:", e);
+      setAuthLoading(false);
+    }
   }, []);
 
   function clearError() { setAuthError(null); }
