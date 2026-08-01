@@ -672,12 +672,12 @@ export default function Map({ onNavigate, state }) {
   };
 
   /* ── Layout: cumulative node positions with extra slot for zone banners ── */
-  const NODE_GAP   = 170; // gap between consecutive nodes
-  const ZONE_SLOT  = 90;  // extra vertical space reserved for a zone banner
+  const NODE_GAP   = 145; // gap between consecutive nodes
+  const ZONE_SLOT  = 75;  // extra vertical space reserved for a zone banner
 
   const nodeTops = KEPO_LEVELS.reduce((acc, level, i) => {
     if (i === 0) {
-      acc.push(ZONE_BANNERS[level.id] ? 200 : 90);
+      acc.push(ZONE_BANNERS[level.id] ? 85 : 50);
     } else {
       const prev = acc[i - 1];
       const extra = ZONE_BANNERS[level.id] ? ZONE_SLOT : 0;
@@ -689,12 +689,12 @@ export default function Map({ onNavigate, state }) {
   const containerHeight = nodeTops[nodeTops.length - 1] + 210;
 
   return (
-    <div style={{ paddingTop: '7.5rem', paddingBottom: '6rem', minHeight: '100vh', position: 'relative' }}>
+    <div style={{ paddingTop: '5.5rem', paddingBottom: '5rem', minHeight: '100vh', position: 'relative' }}>
       
       {/* ── Page Header ───────────────────────────────────────── */}
-      <div className="container-x" style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
+      <div className="container-x" style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
         <div className="chip">PETA PETUALANGAN</div>
-        <h1 style={{ fontSize: 'clamp(2.2rem, 5vw, 3.8rem)', marginTop: '.8rem' }}>
+        <h1 style={{ fontSize: 'clamp(2rem, 4.5vw, 3.2rem)', marginTop: '.6rem' }}>
           Jelajahi <span className="neon-cyan">8 Level</span> Mitos & Fakta
         </h1>
         <p style={{ color: 'var(--text-secondary)', marginTop: '.6rem', fontSize: '1.05rem', maxWidth: '520px', margin: '.6rem auto 0' }}>
@@ -704,7 +704,7 @@ export default function Map({ onNavigate, state }) {
         {/* Global path progress pill */}
         <div style={{
           display: 'inline-flex', alignItems: 'center', gap: '.8rem',
-          marginTop: '1.4rem', padding: '.5rem 1.2rem',
+          marginTop: '1rem', padding: '.45rem 1.1rem',
           borderRadius: '999px', background: 'var(--bg-surface)',
           border: '1.5px solid var(--border-strong)',
           fontSize: '.82rem', fontFamily: "'JetBrains Mono', monospace", fontWeight: 700,
@@ -782,7 +782,7 @@ export default function Map({ onNavigate, state }) {
             const btnSize = isBoss ? 84 : isActive ? 76 : 68;
 
             /* Zone banner positioning */
-            const bannerTop = topPx - (isActive ? 125 : 105);
+            const bannerTop = topPx - (isActive ? 70 : 60);
 
             return (
               <React.Fragment key={level.id}>
