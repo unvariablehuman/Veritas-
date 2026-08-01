@@ -243,7 +243,7 @@ export default function Navbar({
         {/* Mobile dropdown — card terpisah di bawah pill, tidak mengubah bentuk pill */}
         {mobileOpen && (
           <div
-            className="min-[640px]:hidden mt-2 rounded-2xl px-3 py-3 flex flex-col gap-0.5"
+            className="min-[640px]:hidden mt-2 rounded-2xl px-3 py-3 flex flex-col gap-0.5 max-h-[calc(100vh-90px)] overflow-y-auto"
             style={{
               background: 'var(--bg-surface)',
               border: '1px solid var(--border-default)',
