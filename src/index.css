@@ -60,6 +60,52 @@
     radial-gradient(ellipse 45% 35% at 85% 20%, rgba(216, 27, 96, 0.05), transparent 60%),
     radial-gradient(ellipse 60% 45% at 50% 100%, rgba(217, 119, 6, 0.04), transparent 60%);
 }
+
+/* Custom Scrollbar System for Light and Dark Modes */
+html {
+  scrollbar-color: rgba(255, 255, 255, 0.25) var(--bg-main);
+  scrollbar-width: thin;
+}
+
+html.light {
+  scrollbar-color: rgba(0, 136, 163, 0.35) #F8FAFC;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-main);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.22);
+  border-radius: 999px;
+  border: 2px solid var(--bg-main);
+  transition: background 0.2s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 240, 255, 0.6);
+}
+
+/* Light mode custom scrollbar */
+.light ::-webkit-scrollbar-track {
+  background: #F8FAFC;
+}
+
+.light ::-webkit-scrollbar-thumb {
+  background: rgba(0, 136, 163, 0.30);
+  border-radius: 999px;
+  border: 2px solid #F8FAFC;
+}
+
+.light ::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 136, 163, 0.65);
+}
+
 *, *::before, *::after {
   box-sizing: border-box;
 }
