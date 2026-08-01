@@ -126,101 +126,103 @@ export default function Navbar({
                 <span className="hidden xs:inline sm:inline ml-0.5">XP</span>
               </div>
 
-              {/* ── Auth section ── */}
-              {currentUser ? (
-                /* User avatar + dropdown */
-                <div ref={userMenuRef} style={{ position: 'relative' }}>
-                  <button
-                    onClick={() => setUserMenuOpen(o => !o)}
-                    title={displayName}
-                    aria-label="User menu"
-                    style={{
-                      width: '32px', height: '32px', borderRadius: '50%',
-                      border: '2px solid rgba(245,158,11,0.6)',
-                      background: 'var(--bg-elev)',
-                      cursor: 'pointer', overflow: 'hidden', padding: 0,
-                      display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    }}
-                  >
-                    {avatarUrl ? (
-                      <img src={avatarUrl} alt={displayName} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                    ) : (
-                      <span style={{ fontSize: '.75rem', fontWeight: 800, color: '#F59E0B' }}>
-                        {initials}
-                      </span>
-                    )}
-                  </button>
-
-                  {userMenuOpen && (
-                    <div
+              {/* ── Auth section — desktop only, hidden on mobile ── */}
+              <div className="hidden min-[640px]:flex items-center">
+                {currentUser ? (
+                  /* User avatar + dropdown */
+                  <div ref={userMenuRef} style={{ position: 'relative' }}>
+                    <button
+                      onClick={() => setUserMenuOpen(o => !o)}
+                      title={displayName}
+                      aria-label="User menu"
                       style={{
-                        position: 'absolute', right: 0, top: 'calc(100% + 8px)',
-                        width: '200px', background: 'var(--bg-surface)',
-                        border: '1px solid var(--border-default)',
-                        borderRadius: '16px', boxShadow: '0 12px 35px rgba(0,0,0,0.35)',
-                        overflow: 'hidden', zIndex: 100,
+                        width: '32px', height: '32px', borderRadius: '50%',
+                        border: '2px solid rgba(245,158,11,0.6)',
+                        background: 'var(--bg-elev)',
+                        cursor: 'pointer', overflow: 'hidden', padding: 0,
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
                       }}
                     >
-                      <div style={{ padding: '.8rem 1rem', borderBottom: '1px solid var(--border-default)', background: 'var(--bg-elev)' }}>
-                        <div style={{ fontWeight: 800, fontSize: '.88rem', color: 'var(--text-primary)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                          {displayName}
-                        </div>
-                        <div style={{ fontSize: '.73rem', color: 'var(--text-secondary)', marginTop: '2px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                          {currentUser.email || (currentUser.isDemo ? 'Akun Demo' : 'Tamu')}
-                        </div>
-                      </div>
+                      {avatarUrl ? (
+                        <img src={avatarUrl} alt={displayName} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                      ) : (
+                        <span style={{ fontSize: '.75rem', fontWeight: 800, color: '#F59E0B' }}>
+                          {initials}
+                        </span>
+                      )}
+                    </button>
 
-                      <div style={{ padding: '.4rem' }}>
-                        <button
-                          onClick={() => { setUserMenuOpen(false); onNavigate('dashboard'); }}
-                          style={dropdownItemStyle}
-                        >
-                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
-                          Dashboard
-                        </button>
-                        <button
-                          onClick={() => {
-                            setUserMenuOpen(false);
-                            if (window.confirm('Yakin keluar dari Veritas+?')) onSignOut();
-                          }}
-                          style={{ ...dropdownItemStyle, color: '#FF7095' }}
-                        >
-                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-                          Keluar
-                        </button>
+                    {userMenuOpen && (
+                      <div
+                        style={{
+                          position: 'absolute', right: 0, top: 'calc(100% + 8px)',
+                          width: '200px', background: 'var(--bg-surface)',
+                          border: '1px solid var(--border-default)',
+                          borderRadius: '16px', boxShadow: '0 12px 35px rgba(0,0,0,0.35)',
+                          overflow: 'hidden', zIndex: 100,
+                        }}
+                      >
+                        <div style={{ padding: '.8rem 1rem', borderBottom: '1px solid var(--border-default)', background: 'var(--bg-elev)' }}>
+                          <div style={{ fontWeight: 800, fontSize: '.88rem', color: 'var(--text-primary)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                            {displayName}
+                          </div>
+                          <div style={{ fontSize: '.73rem', color: 'var(--text-secondary)', marginTop: '2px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                            {currentUser.email || (currentUser.isDemo ? 'Akun Demo' : 'Tamu')}
+                          </div>
+                        </div>
+
+                        <div style={{ padding: '.4rem' }}>
+                          <button
+                            onClick={() => { setUserMenuOpen(false); onNavigate('dashboard'); }}
+                            style={dropdownItemStyle}
+                          >
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+                            Dashboard
+                          </button>
+                          <button
+                            onClick={() => {
+                              setUserMenuOpen(false);
+                              if (window.confirm('Yakin keluar dari Veritas+?')) onSignOut();
+                            }}
+                            style={{ ...dropdownItemStyle, color: '#FF7095' }}
+                          >
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                            Keluar
+                          </button>
+                        </div>
                       </div>
-                    </div>
-                  )}
-                </div>
-              ) : (
-                /* Login button — guest */
-                <button
-                  onClick={() => onOpenAuth('login')}
-                  data-testid="nav-login-btn"
-                  style={{
-                    padding: '.35rem .75rem',
-                    borderRadius: '20px',
-                    border: '1.5px solid rgba(245,158,11,0.5)',
-                    background: 'rgba(245,158,11,0.08)',
-                    color: '#F59E0B',
-                    fontWeight: 700,
-                    fontSize: '.78rem',
-                    cursor: 'pointer',
-                    transition: 'all 200ms',
-                    whiteSpace: 'nowrap',
-                  }}
-                  onMouseEnter={e => {
-                    e.currentTarget.style.background = 'rgba(245,158,11,0.18)';
-                    e.currentTarget.style.borderColor = '#F59E0B';
-                  }}
-                  onMouseLeave={e => {
-                    e.currentTarget.style.background = 'rgba(245,158,11,0.08)';
-                    e.currentTarget.style.borderColor = 'rgba(245,158,11,0.5)';
-                  }}
-                >
-                  Masuk
-                </button>
-              )}
+                    )}
+                  </div>
+                ) : (
+                  /* Login button — desktop only */
+                  <button
+                    onClick={() => onOpenAuth('login')}
+                    data-testid="nav-login-btn"
+                    style={{
+                      padding: '.35rem .75rem',
+                      borderRadius: '20px',
+                      border: '1.5px solid rgba(245,158,11,0.5)',
+                      background: 'rgba(245,158,11,0.08)',
+                      color: '#F59E0B',
+                      fontWeight: 700,
+                      fontSize: '.78rem',
+                      cursor: 'pointer',
+                      transition: 'all 200ms',
+                      whiteSpace: 'nowrap',
+                    }}
+                    onMouseEnter={e => {
+                      e.currentTarget.style.background = 'rgba(245,158,11,0.18)';
+                      e.currentTarget.style.borderColor = '#F59E0B';
+                    }}
+                    onMouseLeave={e => {
+                      e.currentTarget.style.background = 'rgba(245,158,11,0.08)';
+                      e.currentTarget.style.borderColor = 'rgba(245,158,11,0.5)';
+                    }}
+                  >
+                    Masuk
+                  </button>
+                )}
+              </div>
 
               {/* Mobile hamburger */}
               <button
@@ -270,11 +272,45 @@ export default function Navbar({
               );
             })}
 
-            {/* Auth */}
-            {!currentUser && (
+            {/* Auth di dalam drawer — mobile only */}
+            {currentUser ? (
+              /* User info + actions */
+              <div className="mt-1 rounded-xl overflow-hidden" style={{ border: '1px solid var(--border-default)' }}>
+                <div className="px-3.5 py-2.5" style={{ background: 'var(--bg-elev)' }}>
+                  <div className="font-bold text-sm" style={{ color: 'var(--text-primary)' }}>{displayName}</div>
+                  <div className="text-xs mt-0.5" style={{ color: 'var(--text-secondary)' }}>
+                    {currentUser.email || (currentUser.isDemo ? 'Akun Demo' : 'Tamu')}
+                  </div>
+                </div>
+                <div className="flex gap-1 p-2" style={{ background: 'var(--bg-surface)' }}>
+                  <button
+                    onClick={() => { setMobileOpen(false); onNavigate('dashboard'); }}
+                    className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg text-xs font-semibold transition-colors hover:bg-black/5 dark:hover:bg-white/5"
+                    style={{ color: 'var(--text-primary)' }}
+                  >
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+                    Dashboard
+                  </button>
+                  <button
+                    onClick={() => { setMobileOpen(false); if (window.confirm('Yakin keluar?')) onSignOut(); }}
+                    className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg text-xs font-semibold transition-colors hover:bg-red-500/10"
+                    style={{ color: '#FF7095' }}
+                  >
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                    Keluar
+                  </button>
+                </div>
+              </div>
+            ) : (
+              /* Masuk button */
               <button
                 onClick={() => { setMobileOpen(false); onOpenAuth('login'); }}
-                className="mt-1 w-full text-center px-3.5 py-2.5 rounded-xl bg-amber-500/10 border border-amber-400/40 text-amber-600 dark:text-amber-400 font-bold text-sm hover:bg-amber-500/20 transition-all cursor-pointer"
+                className="w-full px-3.5 py-3 rounded-xl font-bold text-sm transition-all"
+                style={{
+                  background: 'rgba(245,158,11,0.1)',
+                  border: '1.5px solid rgba(245,158,11,0.45)',
+                  color: '#F59E0B',
+                }}
               >
                 Masuk / Daftar ✨
               </button>
