@@ -84,9 +84,9 @@ export default function Navbar({
             {/* Right side */}
             <div className="flex items-center gap-1 sm:gap-3 flex-shrink-0">
 
-              {/* Info About Us Button */}
+              {/* Info About Us Button — hidden on mobile, shown md+ */}
               <button
-                className="p-1.5 sm:p-2 rounded-full text-slate-600 dark:text-slate-300 hover:text-teal-600 dark:hover:text-teal-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                className="hidden md:inline-flex p-1.5 sm:p-2 rounded-full text-slate-600 dark:text-slate-300 hover:text-teal-600 dark:hover:text-teal-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
                 onClick={() => setShowAbout(true)}
                 title="Tentang Veritas+"
                 aria-label="Tentang Veritas+"
@@ -95,9 +95,9 @@ export default function Navbar({
                 <Info size={18} strokeWidth={2.2} />
               </button>
 
-              {/* Dark mode toggle */}
+              {/* Dark mode toggle — hidden on mobile, shown md+ */}
               <button
-                className="p-1.5 sm:p-2 rounded-full text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                className="hidden md:inline-flex p-1.5 sm:p-2 rounded-full text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
                 onClick={() => setLightMode(!lightMode)}
                 title={lightMode ? 'Switch to Dark Mode' : 'Switch to Light Mode'}
               >
@@ -268,6 +268,28 @@ export default function Navbar({
                   Masuk / Daftar ✨
                 </button>
               )}
+
+              {/* Info + Theme Toggle — only show in mobile drawer */}
+              <div className="flex items-center gap-2 pt-1 mt-1 border-t border-slate-200/60 dark:border-slate-800/60">
+                <button
+                  className="flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-xl text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/50 transition-colors"
+                  onClick={() => { setMobileOpen(false); setShowAbout(true); }}
+                >
+                  <Info size={15} strokeWidth={2.2} />
+                  <span>Tentang</span>
+                </button>
+                <button
+                  className="flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-xl text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/50 transition-colors"
+                  onClick={() => setLightMode(!lightMode)}
+                >
+                  {lightMode ? (
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M20 15.5A8.5 8.5 0 1 1 8.5 4a7 7 0 0 0 11.5 11.5z" stroke="currentColor" strokeWidth="2"/></svg>
+                  ) : (
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="5" stroke="currentColor" strokeWidth="2"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M19.1 4.9l-1.4 1.4M6.3 17.7l-1.4 1.4" stroke="currentColor" strokeWidth="2"/></svg>
+                  )}
+                  <span>{lightMode ? 'Mode Gelap' : 'Mode Terang'}</span>
+                </button>
+              </div>
             </div>
           )}
         </nav>
