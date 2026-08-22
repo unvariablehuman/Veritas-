@@ -160,18 +160,14 @@ export default function Quiz({ levelId, onNavigate, state, onStateChange }) {
       isCorrect ? 'fact' : 'myth',
     );
 
-    /* ── Timer bar: rAF double-frame trick so CSS picks up transition ── */
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        setUiState(prev => ({ ...prev, timerActive: true }));
-      });
-    });
+    /* ── No auto-timer: Let user read explanation at their own pace (Jury 2 UX Feedback) ── */
+    setUiState(prev => ({ ...prev, timerActive: false }));
+  }, [uiState.flipped, state, onStateChange]);
 
-    clearTimeout(autoTimerRef.current);
-    autoTimerRef.current = setTimeout(() => {
-      advance(snapshotCorrect);
-    }, REVEAL_DURATION);
-  }, [uiState.flipped, state, onStateChange, advance]);
+  /* ── Explicit manual advance trigger for Next button ───────── */
+  const handleNextQuestion = () => {
+    advance(correctRef.current);
+  };
 
   /* ─── Guard ──────────────────────────────────────────────────── */
   if (!level || questions.length === 0)
@@ -255,26 +251,16 @@ export default function Quiz({ levelId, onNavigate, state, onStateChange }) {
               {/* BACK */}
               <div className={`flip-face flip-face--back ${flipped ? (isMythResult ? 'flip-face--myth' : 'flip-face--fact') : ''}`}>
 
-                {/* ── Countdown timer bar (shrinks left → right) ── */}
+                {/* Top accent border */}
                 <div style={{
                   position: 'absolute',
                   top: 0, left: 0, right: 0,
                   height: '4px',
-                  background: 'rgba(255,255,255,0.08)',
+                  background: isMythResult
+                    ? 'linear-gradient(90deg, #FF5C7A, #FF9090)'
+                    : 'linear-gradient(90deg, #00F0FF, #7CFFB2)',
                   borderRadius: '12px 12px 0 0',
-                  overflow: 'hidden',
-                }}>
-                  <div style={{
-                    height: '100%',
-                    width: timerActive ? '0%' : '100%',
-                    background: isMythResult
-                      ? 'linear-gradient(90deg, #FF5C7A, #FF9090)'
-                      : 'linear-gradient(90deg, #00F0FF, #7CFFB2)',
-                    transition: timerActive
-                      ? `width ${REVEAL_DURATION}ms linear`
-                      : 'none',
-                  }} />
-                </div>
+                }} />
 
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                   <div className="chip" style={{ borderColor: isMythResult ? 'rgba(255,92,122,.6)' : 'rgba(124,255,178,.6)', color: isMythResult ? '#FF7095' : 'var(--brand-mint)' }}>
@@ -304,26 +290,43 @@ export default function Quiz({ levelId, onNavigate, state, onStateChange }) {
             </div>
           </div>
 
-          {/* Answer buttons */}
+          {/* Answer or Next buttons */}
           <div style={{ marginTop: '2rem', display: 'flex', gap: '1rem', flexWrap: 'wrap', justifyContent: 'center' }}>
-            <button
-              className="btn btn-secondary"
-              data-testid="quiz-answer-myth"
-              style={{ minWidth: '180px', fontSize: '1.1rem', opacity: flipped ? 0.4 : 1, transition: 'opacity 200ms' }}
-              disabled={flipped}
-              onClick={() => handleAnswer('myth')}
-            >
-              <span style={{ fontSize: '1.3rem' }}>✗</span> MITOS
-            </button>
-            <button
-              className="btn"
-              data-testid="quiz-answer-fact"
-              style={{ minWidth: '180px', fontSize: '1.1rem', background: 'var(--brand-mint)', color: 'var(--bg-elev)', borderColor: 'var(--brand-mint)', opacity: flipped ? 0.4 : 1, transition: 'opacity 200ms' }}
-              disabled={flipped}
-              onClick={() => handleAnswer('fact')}
-            >
-              <span style={{ fontSize: '1.3rem' }}>✓</span> FAKTA
-            </button>
+            {!flipped ? (
+              <>
+                <button
+                  className="btn btn-secondary"
+                  data-testid="quiz-answer-myth"
+                  style={{ minWidth: '180px', fontSize: '1.1rem' }}
+                  onClick={() => handleAnswer('myth')}
+                >
+                  <span style={{ fontSize: '1.3rem' }}>✗</span> MITOS
+                </button>
+                <button
+                  className="btn"
+                  data-testid="quiz-answer-fact"
+                  style={{ minWidth: '180px', fontSize: '1.1rem', background: 'var(--brand-mint)', color: 'var(--bg-elev)', borderColor: 'var(--brand-mint)' }}
+                  onClick={() => handleAnswer('fact')}
+                >
+                  <span style={{ fontSize: '1.3rem' }}>✓</span> FAKTA
+                </button>
+              </>
+            ) : (
+              <button
+                className="btn btn-primary"
+                data-testid="quiz-next-question"
+                style={{
+                  minWidth: '240px',
+                  fontSize: '1.1rem',
+                  padding: '.85rem 2rem',
+                  boxShadow: '0 4px 20px rgba(0, 240, 255, 0.4)',
+                  animation: 'pulse 1.5s infinite alternate',
+                }}
+                onClick={handleNextQuestion}
+              >
+                {idx + 1 >= questions.length ? 'Lihat Hasil Sesi 🎉' : 'Lanjut Pertanyaan →'}
+              </button>
+            )}
           </div>
         </section>
       ) : (

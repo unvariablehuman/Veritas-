@@ -152,7 +152,7 @@ export default function AuthModal({ open, onClose, defaultTab = 'login', reason 
           </button>
 
           {/* Logo + heading */}
-          <div style={{ textAlign: 'center', marginBottom: '.8rem', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          <div style={{ textAlign: 'center', marginBottom: '.6rem', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             <img src={LOGO_SRC} alt="Veritas+" style={{ height: '26px', marginBottom: '.4rem', display: 'block' }} />
             {reason && (
               <p style={{
@@ -166,6 +166,25 @@ export default function AuthModal({ open, onClose, defaultTab = 'login', reason 
                 {reason}
               </p>
             )}
+            
+            {/* Feature Perks Badge (Jury 3 Feedback: Convince user to signup with clear access breakdown) */}
+            <div style={{
+              fontSize: '.73rem',
+              lineHeight: 1.35,
+              color: 'var(--text-secondary)',
+              background: 'linear-gradient(135deg, rgba(0,240,255,0.08), rgba(124,255,178,0.06))',
+              border: '1px solid rgba(0,240,255,0.25)',
+              borderRadius: '10px',
+              padding: '.5rem .7rem',
+              marginTop: '.4rem',
+              textAlign: 'left',
+              width: '100%',
+            }}>
+              <div style={{ fontWeight: 700, color: 'var(--brand-mint)', marginBottom: '3px', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                ⚡ Modul & AI Bisa Diakses Langsung!
+              </div>
+              <div>Sebagai <strong>Guest</strong> kamu bisa langsung mencoba Learning Path & Kepo AI. <strong>Daftar Akun</strong> untuk sinkronkan progress Cloud, klaim Badge, & Peringkat.</div>
+            </div>
           </div>
 
           {/* Tabs */}
