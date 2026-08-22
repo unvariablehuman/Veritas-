@@ -82,9 +82,18 @@ export function AuthProvider({ children }) {
 
   async function signInGoogle() {
     setAuthError(null);
+    const isDummyConfig = !import.meta.env.VITE_FIREBASE_API_KEY || import.meta.env.VITE_FIREBASE_API_KEY.includes('Dummy');
+    if (isDummyConfig) {
+      signInDemo();
+      return;
+    }
     try {
       await signInWithPopup(auth, googleProvider);
     } catch (err) {
+      if (err.code === 'auth/invalid-api-key' || err.code?.includes('api-key')) {
+        signInDemo();
+        return;
+      }
       setAuthError(friendlyError(err.code));
       throw err;
     }
@@ -92,9 +101,34 @@ export function AuthProvider({ children }) {
 
   async function signInEmail(email, password) {
     setAuthError(null);
+    const isDummyConfig = !import.meta.env.VITE_FIREBASE_API_KEY || import.meta.env.VITE_FIREBASE_API_KEY.includes('Dummy');
+    if (isDummyConfig) {
+      const localUser = {
+        uid: 'user_' + String(email).replace(/[^a-zA-Z0-9]/g, '_'),
+        displayName: email.split('@')[0],
+        email: email,
+        photoURL: null,
+        isLocal: true,
+      };
+      localStorage.setItem('veritas.demoUser', JSON.stringify(localUser));
+      setDemoUser(localUser);
+      return;
+    }
     try {
       await signInWithEmailAndPassword(auth, email, password);
     } catch (err) {
+      if (err.code === 'auth/invalid-api-key' || err.code?.includes('api-key')) {
+        const localUser = {
+          uid: 'user_' + String(email).replace(/[^a-zA-Z0-9]/g, '_'),
+          displayName: email.split('@')[0],
+          email: email,
+          photoURL: null,
+          isLocal: true,
+        };
+        localStorage.setItem('veritas.demoUser', JSON.stringify(localUser));
+        setDemoUser(localUser);
+        return;
+      }
       setAuthError(friendlyError(err.code));
       throw err;
     }
@@ -102,12 +136,37 @@ export function AuthProvider({ children }) {
 
   async function signUpEmail(email, password, displayName) {
     setAuthError(null);
+    const isDummyConfig = !import.meta.env.VITE_FIREBASE_API_KEY || import.meta.env.VITE_FIREBASE_API_KEY.includes('Dummy');
+    if (isDummyConfig) {
+      const localUser = {
+        uid: 'user_' + String(email).replace(/[^a-zA-Z0-9]/g, '_'),
+        displayName: displayName || email.split('@')[0],
+        email: email,
+        photoURL: null,
+        isLocal: true,
+      };
+      localStorage.setItem('veritas.demoUser', JSON.stringify(localUser));
+      setDemoUser(localUser);
+      return;
+    }
     try {
       const cred = await createUserWithEmailAndPassword(auth, email, password);
       if (displayName) {
         await updateProfile(cred.user, { displayName });
       }
     } catch (err) {
+      if (err.code === 'auth/invalid-api-key' || err.code?.includes('api-key')) {
+        const localUser = {
+          uid: 'user_' + String(email).replace(/[^a-zA-Z0-9]/g, '_'),
+          displayName: displayName || email.split('@')[0],
+          email: email,
+          photoURL: null,
+          isLocal: true,
+        };
+        localStorage.setItem('veritas.demoUser', JSON.stringify(localUser));
+        setDemoUser(localUser);
+        return;
+      }
       setAuthError(friendlyError(err.code));
       throw err;
     }
@@ -164,6 +223,10 @@ function friendlyError(code) {
       return 'Login dibatalkan.';
     case 'auth/network-request-failed':
       return 'Koneksi gagal. Periksa internet kamu.';
+    case 'auth/invalid-api-key':
+    case 'auth/api-key-not-valid-please-pass-a-valid-api-key':
+    case 'auth/operation-not-allowed':
+      return 'Firebase Auth belum dikonfigurasi. Silakan gunakan Quick Demo Login.';
     default:
       return 'Terjadi kesalahan. Coba lagi.';
   }
